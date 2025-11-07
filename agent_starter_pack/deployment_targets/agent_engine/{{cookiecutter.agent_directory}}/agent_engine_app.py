@@ -174,15 +174,13 @@ agent_engine = AgentEngineApp.create(
     session_service=InMemorySessionService(),
 )
 {%- else %}
-artifact_service_builder = (
-    lambda: GcsArtifactService(bucket_name=artifacts_bucket_name)
-    if artifacts_bucket_name
-    else None
-)
-
 agent_engine = AgentEngineApp(
     app=adk_app,
-    artifact_service_builder=artifact_service_builder,
+    artifact_service_builder=lambda: GcsArtifactService(
+        bucket_name=artifacts_bucket_name
+    )
+    if artifacts_bucket_name
+    else None,
 )
 {%- endif -%}
 {% else %}
